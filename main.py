@@ -1,10 +1,20 @@
 import pcap,sys
 from pycanopen import *
 from ctypes import *
+libc = cdll.LoadLibrary('libc.so.6')
+libcanopen = cdll.LoadLibrary('libcanopen.so')
+
+sock = libcanopen.can_socket_open_timeout('vcan0', 0)
 
 inp=pcap.pcap("../capture/can0-1424041603.pcap")
-outp=CANopen("vcan0")
 for ts,pkt in inp:
-    buf=bytearray(16)
-    buf[0:len(pkt)]=pkt
-    outp.write_can_frame(CANFrame.from_buffer_copy(buf))
+    buf=(c_uint8*16)()
+
+    for i in range(0,4): #Copy header (it's somehow backwards)
+        buf[i]=ord(pkt[3-i])
+        print hex(buf[i]),
+    for i in range(4,len(pkt)):
+        buf[i]=ord(pkt[i])
+#        print hex(buf[i]),
+    print buf[:]
+    print "=",libc.write(sock,byref(buf),c_int(16))
