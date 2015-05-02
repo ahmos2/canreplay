@@ -6,7 +6,7 @@ libc = cdll.LoadLibrary('libc.so.6')
 libcanopen = cdll.LoadLibrary('libcanopen.so')
 
 sock = libcanopen.can_socket_open_timeout('vcan0', 0)
-recording=canrecording('../../capture/can0-1423730484.pcap')
+recording=canrecording('../capture/can0-1423669080.pcap')
 x=0
 for timing,pkt in recording.Packets():
 
