@@ -17,4 +17,4 @@ class canrecording(object):
                     buf[i]=ord(pkt[i])
                 yield (timing, buf)
                 timing,pkt = self.pcap.next()
-        sleep(0)
+        sleep(0.01)
